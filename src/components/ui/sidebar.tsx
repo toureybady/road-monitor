@@ -1,51 +1,64 @@
 import * as React from "react"
+import { useSidebarStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
-const Sidebar = React.forwardRef<
-  React.ElementRef<"aside">,
-  React.ComponentPropsWithoutRef<"aside">
->(({ className, ...props }, ref) => (
-  <aside
-    ref={ref}
-    className={cn(
-      "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-background",
-      className
-    )}
-    {...props}
-  />
-))
-Sidebar.displayName = "Sidebar"
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const { isOpen, setIsOpen } = useSidebarStore()
 
-const SidebarTrigger = React.forwardRef<
-  React.ElementRef<"button">,
-  React.ComponentPropsWithoutRef<"button">
->(({ className, children, ...props }, ref) => (
-  <button
-    ref={ref}
-    className={cn(
-      "flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-muted",
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </button>
-))
-SidebarTrigger.displayName = "SidebarTrigger"
-
-const SidebarClose = React.forwardRef<
-  React.ElementRef<"button">,
-  React.ComponentPropsWithoutRef<"button">
->(({ className, ...props }, ref) => (
-  <button
-    ref={ref}
-    className={cn(
-      "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
-      className
-    )}
-    {...props}
-  />
-))
+  return (
+    <div className="flex h-screen">
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="p-4">
+          <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
+          <nav className="space-y-2">
+            <a
+              href="/dashboard"
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Dashboard
+            </a>
+            <a
+              href="/projects"
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Projects
+            </a>
+            <a
+              href="/map"
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Map
+            </a>
+            <a
+              href="/notifications"
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Notifications
+            </a>
+            <a
+              href="/settings"
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Settings
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div className="flex-1 ml-0 transition-transform duration-200" onClick={() => setIsOpen(false)}>
+        {children}
+      </div>
+    </div>
+  )
 SidebarClose.displayName = "SidebarClose"
 
 const SidebarContent = React.forwardRef<
