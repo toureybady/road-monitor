@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/app/page.tsx",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN": "pk.eyJ1IjoidG91cmV5YmFkeSIsImEiOiJjbWJoNXU5ZWIwNmI1MmlzZ3cyNXphODh5In0.lE44b4zomO8dkehFk8yd1A"
+  }
+}
