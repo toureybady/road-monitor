@@ -2,64 +2,101 @@ import * as React from "react"
 import { useSidebarStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
-export function SidebarProvider({ children }: { children: React.ReactNode }) {
+const Sidebar = React.forwardRef<
+  React.ElementRef<"div">,
+  React.ComponentPropsWithoutRef<"div">
+>(({ className, ...props }, ref) => {
   const { isOpen, setIsOpen } = useSidebarStore()
 
   return (
-    <div className="flex h-screen">
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200",
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
-          <nav className="space-y-2">
-            <a
-              href="/dashboard"
-              className="block px-4 py-2 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              Dashboard
-            </a>
-            <a
-              href="/projects"
-              className="block px-4 py-2 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              Projects
-            </a>
-            <a
-              href="/map"
-              className="block px-4 py-2 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              Map
-            </a>
-            <a
-              href="/notifications"
-              className="block px-4 py-2 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              Notifications
-            </a>
-            <a
-              href="/settings"
-              className="block px-4 py-2 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              Settings
-            </a>
-          </nav>
-        </div>
-      </div>
-      <div className="flex-1 ml-0 transition-transform duration-200" onClick={() => setIsOpen(false)}>
-        {children}
+    <div
+      ref={ref}
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200",
+        isOpen ? "translate-x-0" : "-translate-x-full",
+        className
+      )}
+      {...props}
+    >
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
+        <nav className="space-y-2">
+          <a
+            href="/dashboard"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setIsOpen(false)}
+          >
+            Dashboard
+          </a>
+          <a
+            href="/projects"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setIsOpen(false)}
+          >
+            Projects
+          </a>
+          <a
+            href="/map"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setIsOpen(false)}
+          >
+            Map
+          </a>
+          <a
+            href="/notifications"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setIsOpen(false)}
+          >
+            Notifications
+          </a>
+          <a
+            href="/settings"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setIsOpen(false)}
+          >
+            Settings
+          </a>
+        </nav>
       </div>
     </div>
   )
-}SidebarClose.displayName = "SidebarClose"
+})
+
+const SidebarTrigger = React.forwardRef<
+  React.ElementRef<"button">,
+  React.ComponentPropsWithoutRef<"button">
+>(({ className, ...props }, ref) => {
+  const { isOpen, setIsOpen } = useSidebarStore()
+
+  return (
+    <button
+      ref={ref}
+      className={cn(
+        "flex items-center justify-center rounded-md p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary",
+        className
+      )}
+      onClick={() => setIsOpen(!isOpen)}
+      {...props}
+    >
+      <span className="sr-only">Toggle sidebar</span>
+      <svg
+        className="h-6 w-6"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        {isOpen ? (
+          <path d="M6 18L18 6M6 6l12 12" />
+        ) : (
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        )}
+      </svg>
+    </button>
+  )
+})
 
 const SidebarContent = React.forwardRef<
   React.ElementRef<"div">,
@@ -68,13 +105,12 @@ const SidebarContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex grow flex-col overflow-y-auto bg-background",
+      "flex flex-1 flex-col overflow-y-auto bg-background",
       className
     )}
     {...props}
   />
 ))
-SidebarContent.displayName = "SidebarContent"
 
 const SidebarHeader = ({
   className,
@@ -85,7 +121,6 @@ const SidebarHeader = ({
     {...props}
   />
 )
-SidebarHeader.displayName = "SidebarHeader"
 
 const SidebarFooter = ({
   className,
@@ -96,18 +131,6 @@ const SidebarFooter = ({
     {...props}
   />
 )
-SidebarFooter.displayName = "SidebarFooter"
-
-const SidebarNav = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <nav
-    className={cn("flex flex-1 flex-col space-y-1", className)}
-    {...props}
-  />
-)
-SidebarNav.displayName = "SidebarNav"
 
 const SidebarGroup = ({
   className,
@@ -118,7 +141,6 @@ const SidebarGroup = ({
     {...props}
   />
 )
-SidebarGroup.displayName = "SidebarGroup"
 
 const SidebarItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -126,46 +148,21 @@ const SidebarItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <a
     ref={ref}
-))
-SidebarMenu.displayName = SidebarPrimitive.Menu.displayName
-
-const SidebarMenuItem = React.forwardRef<
-  React.ElementRef<typeof SidebarPrimitive.MenuItem>,
-  React.ComponentPropsWithoutRef<typeof SidebarPrimitive.MenuItem>
->(({ className, ...props }, ref) => (
-  <SidebarPrimitive.MenuItem
-    ref={ref}
-    className={cn("flex flex-col space-y-1", className)}
-    {...props}
-  />
-))
-SidebarMenuItem.displayName = SidebarPrimitive.MenuItem.displayName
-
-const SidebarMenuButton = React.forwardRef<
-  React.ElementRef<typeof SidebarPrimitive.MenuButton>,
-  React.ComponentPropsWithoutRef<typeof SidebarPrimitive.MenuButton>
->(({ className, ...props }, ref) => (
-  <SidebarPrimitive.MenuButton
-    ref={ref}
     className={cn(
-      "flex w-full items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+      "block px-4 py-2 hover:bg-gray-100",
       className
     )}
     {...props}
   />
 ))
-SidebarMenuButton.displayName = SidebarPrimitive.MenuButton.displayName
 
-export {
-  Sidebar,
-  SidebarTrigger,
-  SidebarContent,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-}
+Object.assign(Sidebar, {
+  Trigger: SidebarTrigger,
+  Content: SidebarContent,
+  Header: SidebarHeader,
+  Footer: SidebarFooter,
+  Group: SidebarGroup,
+  Item: SidebarItem,
+})
+
+export { Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarFooter, SidebarGroup, SidebarItem }
