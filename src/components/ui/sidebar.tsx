@@ -59,7 +59,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   )
-SidebarClose.displayName = "SidebarClose"
+}SidebarClose.displayName = "SidebarClose"
 
 const SidebarContent = React.forwardRef<
   React.ElementRef<"div">,
