@@ -1,11 +1,11 @@
 import * as React from "react"
-import { BadgeProps, BadgeVariantProps, badgeVariants } from "@/components/ui/badge"
+import { badgeVariants } from "@/components/ui/badge-variants"
 
 import { cn } from "@/lib/utils"
 
 const Badge = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & BadgeVariantProps
+  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "secondary" | "destructive" | "outline" }
 >(({ className, variant, ...props }, ref) => (
   <div
     ref={ref}
@@ -16,4 +16,4 @@ const Badge = React.forwardRef<
 ))
 Badge.displayName = "Badge"
 
-export { Badge, BadgeProps }
+export { Badge }

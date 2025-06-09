@@ -1,6 +1,7 @@
 import * as React from "react"
 import { useSidebarStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink } from "@/components/ui/navigation-menu"
 
 const Sidebar = React.forwardRef<
   React.ElementRef<"div">,
@@ -20,47 +21,110 @@ const Sidebar = React.forwardRef<
     >
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
-        <nav className="space-y-2">
-          <a
-            href="/dashboard"
-            className="block px-4 py-2 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Dashboard
-          </a>
-          <a
-            href="/projects"
-            className="block px-4 py-2 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Projects
-          </a>
-          <a
-            href="/map"
-            className="block px-4 py-2 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Map
-          </a>
-          <a
-            href="/notifications"
-            className="block px-4 py-2 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Notifications
-          </a>
-          <a
-            href="/settings"
-            className="block px-4 py-2 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Settings
-          </a>
-        </nav>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Navigation</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink href="/dashboard" onClick={() => setIsOpen(false)}>
+                  Dashboard
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/projects" onClick={() => setIsOpen(false)}>
+                  Projects
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/map" onClick={() => setIsOpen(false)}>
+                  Map
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/notifications" onClick={() => setIsOpen(false)}>
+                  Notifications
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/settings" onClick={() => setIsOpen(false)}>
+                  Settings
+                </NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
     </div>
   )
 })
+
+export const SidebarMenuButton = () => {
+  const { isOpen, setIsOpen } = useSidebarStore()
+
+  return (
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="fixed top-4 left-4 z-50 p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+    >
+      <svg
+        className="h-6 w-6"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        {isOpen ? (
+          <path d="M6 18L18 6M6 6l12 12" />
+        ) : (
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        )}
+      </svg>
+    </button>
+  )
+}
+
+export const SidebarMenu = () => {
+  const { isOpen } = useSidebarStore()
+  const { setIsOpen } = useSidebarStore()
+
+  return (
+    <div
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}
+    >
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Navigation</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink href="/dashboard" onClick={() => setIsOpen(false)}>
+                  Dashboard
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/projects" onClick={() => setIsOpen(false)}>
+                  Projects
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/map" onClick={() => setIsOpen(false)}>
+                  Map
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/notifications" onClick={() => setIsOpen(false)}>
+                  Notifications
+                </NavigationMenuLink>
+                <NavigationMenuLink href="/settings" onClick={() => setIsOpen(false)}>
+                  Settings
+                </NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+    </div>
+  )
+}
+
+export const SidebarMenuItem = ({ children }: { children: React.ReactNode }) => {
+  const { setIsOpen } = useSidebarStore()
+  return (
+    <div onClick={() => setIsOpen(false)}>{children}</div>
+  )
+}
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<"button">,

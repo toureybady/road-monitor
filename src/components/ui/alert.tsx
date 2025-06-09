@@ -57,13 +57,15 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   AlertDescriptionProps
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm [&_[aria-hidden="true"]]:~:text-transparent", className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn("text-sm [&_[aria-hidden=\"true\"]]:~:text-transparent", className)}
+      {...props}
+    />
+  )
+})
 AlertDescription.displayName = "AlertDescription"
 
 export { Alert, AlertTitle, AlertDescription }
