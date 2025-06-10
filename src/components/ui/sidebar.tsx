@@ -1,54 +1,6 @@
 import * as React from "react"
 import { useSidebarStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink } from "@/components/ui/navigation-menu"
-
-const Sidebar = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
->(({ className, ...props }, ref) => {
-  const { isOpen, setIsOpen } = useSidebarStore()
-
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200",
-        isOpen ? "translate-x-0" : "-translate-x-full",
-        className
-      )}
-      {...props}
-    >
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Navigation</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink href="/dashboard" onClick={() => setIsOpen(false)}>
-                  Dashboard
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/projects" onClick={() => setIsOpen(false)}>
-                  Projects
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/map" onClick={() => setIsOpen(false)}>
-                  Map
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/notifications" onClick={() => setIsOpen(false)}>
-                  Notifications
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/settings" onClick={() => setIsOpen(false)}>
-                  Settings
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
-    </div>
-  )
-})
 
 export const SidebarMenuButton = () => {
   const { isOpen, setIsOpen } = useSidebarStore()
@@ -78,8 +30,7 @@ export const SidebarMenuButton = () => {
 }
 
 export const SidebarMenu = () => {
-  const { isOpen } = useSidebarStore()
-  const { setIsOpen } = useSidebarStore()
+  const { isOpen, setIsOpen } = useSidebarStore()
 
   return (
     <div
@@ -89,144 +40,110 @@ export const SidebarMenu = () => {
       )}
     >
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-6">Road Monitor</h1>
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Navigation</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink href="/dashboard" onClick={() => setIsOpen(false)}>
+        <SidebarHeader />
+        <nav className="space-y-4">
+          <SidebarGroup>
+            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenuItem>
+                <a href="/dashboard" onClick={() => setIsOpen(false)}>
                   Dashboard
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/projects" onClick={() => setIsOpen(false)}>
+                </a>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <a href="/projects" onClick={() => setIsOpen(false)}>
                   Projects
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/map" onClick={() => setIsOpen(false)}>
+                </a>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <a href="/map" onClick={() => setIsOpen(false)}>
                   Map
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/notifications" onClick={() => setIsOpen(false)}>
+                </a>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <a href="/notifications" onClick={() => setIsOpen(false)}>
                   Notifications
-                </NavigationMenuLink>
-                <NavigationMenuLink href="/settings" onClick={() => setIsOpen(false)}>
+                </a>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <a href="/settings" onClick={() => setIsOpen(false)}>
                   Settings
-                </NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+                </a>
+              </SidebarMenuItem>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </nav>
+        <SidebarFooter />
       </div>
     </div>
   )
 }
 
-export const SidebarMenuItem = ({ children }: { children: React.ReactNode }) => {
-  const { setIsOpen } = useSidebarStore()
+export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div onClick={() => setIsOpen(false)}>{children}</div>
+    <div>
+      <SidebarMenuButton />
+      <SidebarMenu />
+      {children}
+    </div>
   )
 }
 
-const SidebarTrigger = React.forwardRef<
-  React.ElementRef<"button">,
-  React.ComponentPropsWithoutRef<"button">
->(({ className, ...props }, ref) => {
-  const { isOpen, setIsOpen } = useSidebarStore()
-
+export const SidebarMenuItem = React.forwardRef<HTMLAnchorElement, { href: string; children: React.ReactNode }>(({ href, children }, ref) => {
+  const { setIsOpen } = useSidebarStore()
   return (
-    <button
+    <a
+      href={href}
       ref={ref}
-      className={cn(
-        "flex items-center justify-center rounded-md p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary",
-        className
-      )}
-      onClick={() => setIsOpen(!isOpen)}
-      {...props}
+      onClick={() => setIsOpen(false)}
+      className="block px-4 py-2 hover:bg-gray-100"
     >
-      <span className="sr-only">Toggle sidebar</span>
-      <svg
-        className="h-6 w-6"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        {isOpen ? (
-          <path d="M6 18L18 6M6 6l12 12" />
-        ) : (
-          <path d="M4 6h16M4 12h16M4 18h16" />
-        )}
-      </svg>
-    </button>
+      {children}
+    </a>
   )
 })
 
-const SidebarContent = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "flex flex-1 flex-col overflow-y-auto bg-background",
-      className
-    )}
-    {...props}
-  />
+export const SidebarGroupLabel = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref} className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">
+    {children}
+  </div>
 ))
 
-const SidebarHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("flex flex-col space-y-2 py-4", className)}
-    {...props}
-  />
-)
-
-const SidebarFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("flex flex-col py-4", className)}
-    {...props}
-  />
-)
-
-const SidebarGroup = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("flex flex-col space-y-1 text-sm", className)}
-    {...props}
-  />
-)
-
-const SidebarItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, ...props }, ref) => (
-  <a
-    ref={ref}
-    className={cn(
-      "block px-4 py-2 hover:bg-gray-100",
-      className
-    )}
-    {...props}
-  />
+export const SidebarGroupContent = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref} className="space-y-1">
+    {children}
+  </div>
 ))
 
-Object.assign(Sidebar, {
-  Trigger: SidebarTrigger,
-  Content: SidebarContent,
-  Header: SidebarHeader,
-  Footer: SidebarFooter,
-  Group: SidebarGroup,
-  Item: SidebarItem,
-})
+export const SidebarHeader = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref} className="flex items-center px-4 py-3">
+    <h1 className="text-2xl font-bold">Road Monitor</h1>
+    {children}
+  </div>
+))
 
-export { Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarFooter, SidebarGroup, SidebarItem }
+export const SidebarFooter = React.forwardRef<HTMLDivElement, { children?: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref} className="border-t border-gray-200 px-4 py-3">
+    <p className="text-sm text-muted-foreground">© 2025 Road Monitor. All rights reserved.</p>
+    {children}
+  </div>
+))
+
+export const SidebarContent = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref} className="h-full flex-1 overflow-y-auto">
+    {children}
+  </div>
+))
+
+export const SidebarGroup = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => (
+  <div ref={ref}>{children}</div>
+))
+
+// Export type definitions for external use
+export type SidebarMenuItemProps = React.ComponentPropsWithoutRef<typeof SidebarMenuItem>
+export type SidebarGroupLabelProps = React.ComponentPropsWithoutRef<typeof SidebarGroupLabel>
+export type SidebarGroupContentProps = React.ComponentPropsWithoutRef<typeof SidebarGroupContent>
+export type SidebarHeaderProps = React.ComponentPropsWithoutRef<typeof SidebarHeader>
+export type SidebarFooterProps = React.ComponentPropsWithoutRef<typeof SidebarFooter>
+export type SidebarContentProps = React.ComponentPropsWithoutRef<typeof SidebarContent>
+export type SidebarGroupProps = React.ComponentPropsWithoutRef<typeof SidebarGroup>

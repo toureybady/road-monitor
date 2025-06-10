@@ -1,15 +1,15 @@
 import { BarChart3, Map, Box, Upload, FileText, Search, Bell, Settings, Home, FolderOpen } from "lucide-react"
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
   SidebarMenuButton,
+  SidebarMenu,
+  SidebarProvider,
   SidebarMenuItem,
+  SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarHeader,
   SidebarFooter,
+  SidebarContent,
+  SidebarGroup,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 
@@ -58,39 +58,35 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="h-6 w-6 text-blue-600" />
-          <div>
-            <h2 className="font-semibold text-lg">RoadMonitor</h2>
-            <p className="text-xs text-muted-foreground">Construction Routière</p>
+    <SidebarProvider>
+      <SidebarMenu>
+        <SidebarHeader className="p-4">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-6 w-6 text-blue-600" />
+            <div>
+              <h2 className="font-semibold text-lg">RoadMonitor</h2>
+              <p className="text-xs text-muted-foreground">Construction Routière</p>
+            </div>
           </div>
-        </div>
-      </SidebarHeader>
+        </SidebarHeader>
 
-      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            {menuItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarGroupContent>
         </SidebarGroup>
-      </SidebarContent>
 
-      <SidebarFooter className="p-4">
-        <SidebarMenu>
+        <SidebarFooter className="p-4">
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link href="/parametres">
@@ -99,9 +95,9 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+        </SidebarFooter>
+      </SidebarMenu>
+    </SidebarProvider>
   )
 }
 

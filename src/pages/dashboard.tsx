@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import { BarChart3, TrendingUp, Clock, AlertTriangle, MapPin, Calendar, Users, Activity } from "lucide-react"
 
 const kpis = [
