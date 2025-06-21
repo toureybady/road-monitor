@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { useSidebarStore } from "@/lib/store"
 import { cn } from "@/lib/utils"
