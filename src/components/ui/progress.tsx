@@ -1,36 +1,24 @@
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
 
-const progressVariants = cva(
-  "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary",
-        success: "bg-success",
-        destructive: "bg-destructive",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-)
+interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+  value?: number
+}
 
-const Progress = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof progressVariants>
->(({ className, value, variant, ...props }, ref) => (
-  <div className={cn("relative w-full", className)} {...props} ref={ref}>
-    <div className="h-4 w-full overflow-hidden rounded-full bg-secondary" />
+const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
+  ({ className, value = 0, ...props }, ref) => (
     <div
-      className={cn(progressVariants({ variant }), "h-4 rounded-full transition-all duration-200")}
-      style={{ width: `${value}%` }}
-    />
-  </div>
-))
+      ref={ref}
+      className={cn("relative w-full overflow-hidden rounded-full bg-slate-100", className)}
+      {...props}
+    >
+      <div
+        className="h-full rounded-full bg-[#0f2c4a] transition-all duration-300"
+        style={{ width: `${Math.min(Math.max(value, 0), 100)}%` }}
+      />
+    </div>
+  )
+)
 Progress.displayName = "Progress"
 
 export { Progress }
