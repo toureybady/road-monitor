@@ -1,10 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, AreaChart, Area, Legend,
-} from "recharts"
+import { CssGroupedBars, SvgDonut, SvgAreaLines } from "@/components/mini-charts"
 import {
   FolderKanban, TrendingUp, AlertTriangle, DollarSign,
   Clock, MapPin, Bell, Globe, ArrowUp, ArrowDown,
@@ -161,17 +158,15 @@ export default function DashboardPage() {
               <CardDescription className="text-xs">Taux d'exécution physique vs financière (%)</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={210}>
-                <BarChart data={regionalData} margin={{ top: 0, right: 8, left: -18, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="region" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
-                  <Tooltip formatter={(v) => `${v}%`} />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="physique"  name="Physique %"  fill="#3b82f6" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="financier" name="Financier %" fill="#10b981" radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <CssGroupedBars
+                data={regionalData}
+                labelKey="region"
+                series={[
+                  { key: "physique",  label: "Physique %",  color: "#3b82f6" },
+                  { key: "financier", label: "Financier %", color: "#10b981" },
+                ]}
+                formatter={(v) => `${v}%`}
+              />
             </CardContent>
           </Card>
 
@@ -182,27 +177,13 @@ export default function DashboardPage() {
               <CardDescription className="text-xs">{projects.length} projets au total</CardDescription>
             </CardHeader>
             <CardContent className="px-4 pb-3">
-              <ResponsiveContainer width="100%" height={130}>
-                <PieChart>
-                  <Pie
-                    data={statusData}
-                    dataKey="count"
-                    nameKey="status"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={55}
-                    innerRadius={32}
-                  >
-                    {statusData.map((entry, i) => (
-                      <Cell
-                        key={i}
-                        fill={STATUS_COLORS[entry.status as keyof typeof STATUS_COLORS] ?? "#94a3b8"}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              <SvgDonut
+                data={statusData.map((e) => ({
+                  label: e.status,
+                  value: e.count,
+                  color: STATUS_COLORS[e.status as keyof typeof STATUS_COLORS] ?? "#94a3b8",
+                }))}
+              />
               <div className="space-y-1.5 mt-1">
                 {statusData.map((entry, i) => (
                   <div key={i} className="flex items-center justify-between text-xs">
@@ -230,16 +211,14 @@ export default function DashboardPage() {
               <CardDescription className="text-xs">Progression physique et financière</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={175}>
-                <AreaChart data={monthlyProgress} margin={{ top: 5, right: 8, left: -18, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
-                  <Tooltip formatter={(v) => `${v}%`} />
-                  <Area type="monotone" dataKey="physique"  name="Physique %"  stroke="#3b82f6" fill="#3b82f615" strokeWidth={2} />
-                  <Area type="monotone" dataKey="financier" name="Financier %" stroke="#10b981" fill="#10b98115" strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
+              <SvgAreaLines
+                data={monthlyProgress}
+                xKey="month"
+                series={[
+                  { key: "physique",  label: "Physique %",  color: "#3b82f6" },
+                  { key: "financier", label: "Financier %", color: "#10b981" },
+                ]}
+              />
             </CardContent>
           </Card>
 

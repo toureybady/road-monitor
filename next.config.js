@@ -9,7 +9,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    optimizePackageImports: ['recharts', 'lucide-react'],
+    optimizePackageImports: ['lucide-react'],
   },
   webpack: (config) => {
     config.parallelism = 1

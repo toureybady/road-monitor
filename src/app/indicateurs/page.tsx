@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  RadarChart, PolarGrid, PolarAngleAxis, Radar,
-} from "recharts"
+import { CssHorizBars } from "@/components/mini-charts"
 import { BarChart3, TrendingUp, TrendingDown, Minus, Target } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -94,19 +91,9 @@ export default function IndicateursPage() {
               <CardDescription className="text-xs">% de la cible atteint</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={260}>
-                <BarChart data={barData()} layout="vertical" margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                  <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}%`} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={170} />
-                  <Tooltip formatter={(v) => `${v}%`} />
-                  <Bar dataKey="actuel" name="% Cible atteint" radius={[0, 4, 4, 0]}>
-                    {barData().map((entry, i) => (
-                      <rect key={i} fill={entry.fill} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <CssHorizBars
+                data={barData().map((d) => ({ label: d.name, value: d.actuel, color: d.fill }))}
+              />
             </CardContent>
           </Card>
 
@@ -117,15 +104,9 @@ export default function IndicateursPage() {
               <CardDescription className="text-xs">Actuel vs cible (100%)</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={260}>
-                <RadarChart data={radarData()}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="indicator" tick={{ fontSize: 9 }} />
-                  <Radar name="Actuel" dataKey="actuel" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.25} />
-                  <Radar name="Cible"  dataKey="cible"  stroke="#10b981" fill="#10b981" fillOpacity={0.08} strokeDasharray="5 5" />
-                  <Tooltip formatter={(v) => `${v}%`} />
-                </RadarChart>
-              </ResponsiveContainer>
+              <CssHorizBars
+                data={radarData().map((d) => ({ label: d.indicator, value: d.actuel, color: "#3b82f6" }))}
+              />
             </CardContent>
           </Card>
         </div>

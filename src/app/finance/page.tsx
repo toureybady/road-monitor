@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend,
-} from "recharts"
+import { CssGroupedBars, SvgDonut } from "@/components/mini-charts"
 import { DollarSign, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -117,17 +114,15 @@ export default function FinancePage() {
               <CardDescription className="text-xs">En milliards GNF</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={regionalBudget} margin={{ top: 0, right: 8, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="region" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} />
-                  <Tooltip formatter={(v) => `${v} Mrd GNF`} />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="budget"   name="Budget"    fill="#3b82f6" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="decaisse" name="Décaissé"  fill="#10b981" radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <CssGroupedBars
+                data={regionalBudget}
+                labelKey="region"
+                series={[
+                  { key: "budget",   label: "Budget",   color: "#3b82f6" },
+                  { key: "decaisse", label: "Décaissé", color: "#10b981" },
+                ]}
+                formatter={(v) => `${v} Mrd`}
+              />
             </CardContent>
           </Card>
 
@@ -138,24 +133,13 @@ export default function FinancePage() {
               <CardDescription className="text-xs">Répartition par bailleur</CardDescription>
             </CardHeader>
             <CardContent className="px-2 pb-3">
-              <ResponsiveContainer width="100%" height={140}>
-                <PieChart>
-                  <Pie
-                    data={financingSources}
-                    dataKey="amount"
-                    nameKey="source"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={55}
-                    innerRadius={30}
-                  >
-                    {financingSources.map((entry, i) => (
-                      <Cell key={i} fill={SOURCE_COLORS[entry.source] ?? `hsl(${i * 40}, 70%, 50%)`} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(v) => `${(Number(v) / 1000).toFixed(0)} Mrd GNF`} />
-                </PieChart>
-              </ResponsiveContainer>
+              <SvgDonut
+                data={financingSources.map((fs, i) => ({
+                  label: fs.source,
+                  value: fs.amount,
+                  color: SOURCE_COLORS[fs.source] ?? `hsl(${i * 40}, 70%, 50%)`,
+                }))}
+              />
               <div className="space-y-1.5 mt-2">
                 {financingSources.slice(0, 5).map((fs, i) => (
                   <div key={i} className="flex items-center justify-between text-xs">
