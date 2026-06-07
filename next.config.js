@@ -13,6 +13,7 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.parallelism = 1
+    config.optimization.minimize = false
     return config
   },
 }
