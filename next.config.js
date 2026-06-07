@@ -8,6 +8,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    optimizePackageImports: ['recharts', 'lucide-react'],
+  },
+  webpack: (config) => {
+    config.parallelism = 1
+    return config
+  },
 }
 
 module.exports = nextConfig
